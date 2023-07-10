@@ -18,19 +18,20 @@
   
     <meta name="description" content="[HDCTF 2023]LoginMaster登陆界面，大概率就是sql注入了，随便输入一些东西后，提示需要用admin登陆，然后在尝试很多语句后无果，发现在robots.txt中有源码， 1234567891011function checkSql($s) &amp;#123;    if(preg_match(&quot;&#x2F;regexp|between|in|flag|&#x3D;|&gt;|&lt;|and|">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Eason">
-<meta property="og:url" content="http://example.com/2023/07/07/[HDCTF%202023]LoginMaster/index.html">
+<meta property="og:title" content="HDCTF 2023-LoginMaster">
+<meta property="og:url" content="http://example.com/2023/07/10/HDCTF-2023-LoginMaster/index.html">
 <meta property="og:site_name" content="Eason">
 <meta property="og:description" content="[HDCTF 2023]LoginMaster登陆界面，大概率就是sql注入了，随便输入一些东西后，提示需要用admin登陆，然后在尝试很多语句后无果，发现在robots.txt中有源码， 1234567891011function checkSql($s) &amp;#123;    if(preg_match(&quot;&#x2F;regexp|between|in|flag|&#x3D;|&gt;|&lt;|and|">
 <meta property="og:locale">
-<meta property="article:published_time" content="2023-07-07T07:12:46.683Z">
-<meta property="article:modified_time" content="2023-07-05T07:01:17.218Z">
+<meta property="article:published_time" content="2023-07-10T14:44:22.000Z">
+<meta property="article:modified_time" content="2023-07-10T14:45:03.560Z">
 <meta property="article:author" content="Eason">
+<meta property="article:tag" content="replace函数">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Eason</title>
+  <title>HDCTF 2023-LoginMaster - Eason</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -196,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text=""></span>
+            <span id="subtitle" data-typed-text="HDCTF 2023-LoginMaster"></span>
           
         </div>
 
@@ -207,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-07-07 15:12" pubdate>
-          July 7, 2023 pm
+        <time datetime="2023-07-10 22:44" pubdate>
+          July 10, 2023 pm
         </time>
       </span>
     
@@ -268,7 +269,7 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none"></h1>
+            <h1 style="display: none">HDCTF 2023-LoginMaster</h1>
             
             
               <div class="markdown-body">
@@ -295,7 +296,7 @@
 <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">测试只使用一个replace会怎么样<br>select replace(<span class="hljs-emphasis">&#x27;.&#x27;</span>,<span class="hljs-emphasis">&#x27;char(46)&#x27;</span>,<span class="hljs-emphasis">&#x27;.&#x27;</span>);<br><span class="hljs-section">mysql&gt; select replace(&#x27;.&#x27;,&#x27;char(46)&#x27;,&#x27;.&#x27;);</span><br><span class="hljs-section">+-----------------------------+</span><br><span class="hljs-section">| replace(&#x27;.&#x27;,&#x27;char(46)&#x27;,&#x27;.&#x27;) |</span><br><span class="hljs-section">+-----------------------------+</span><br><span class="hljs-section">| .                           |</span><br><span class="hljs-section">+-----------------------------+</span><br>1 row in set (0.00 sec)<br></code></pre></td></tr></table></figure>
 
 <p>只出现了一个’.’那么怎么能够让他输入输出一样呢，上一个例子中如果我们把第一个参数修改为replace(‘.’,’char(46)’,’.’)呢他会输出什么，</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql"><br>mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> replace(<span class="hljs-string">&#x27;replace(&quot;.&quot;,char(46),&quot;.&quot;)&#x27;</span>,<span class="hljs-type">char</span>(<span class="hljs-number">46</span>),<span class="hljs-string">&#x27;.&#x27;</span>);<br><span class="hljs-operator">+</span><span class="hljs-comment">---------------------------------------------------+</span><br><span class="hljs-operator">|</span> replace(<span class="hljs-string">&#x27;replace(&quot;.&quot;,char(46),&quot;.&quot;)&#x27;</span>,<span class="hljs-type">char</span>(<span class="hljs-number">46</span>),<span class="hljs-string">&#x27;.&#x27;</span>) <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">---------------------------------------------------+</span><br><span class="hljs-operator">|</span> replace(&quot;.&quot;,<span class="hljs-type">char</span>(<span class="hljs-number">46</span>),&quot;.&quot;)                         <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">---------------------------------------------------+</span><br><span class="hljs-number">1</span> <span class="hljs-type">row</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.00</span> sec)<br></code></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> replace(<span class="hljs-string">&#x27;replace(&quot;.&quot;,char(46),&quot;.&quot;)&#x27;</span>,<span class="hljs-type">char</span>(<span class="hljs-number">46</span>),<span class="hljs-string">&#x27;.&#x27;</span>);<br><span class="hljs-operator">+</span><span class="hljs-comment">---------------------------------------------------+</span><br><span class="hljs-operator">|</span> replace(<span class="hljs-string">&#x27;replace(&quot;.&quot;,char(46),&quot;.&quot;)&#x27;</span>,<span class="hljs-type">char</span>(<span class="hljs-number">46</span>),<span class="hljs-string">&#x27;.&#x27;</span>) <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">---------------------------------------------------+</span><br><span class="hljs-operator">|</span> replace(&quot;.&quot;,<span class="hljs-type">char</span>(<span class="hljs-number">46</span>),&quot;.&quot;)                         <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">---------------------------------------------------+</span><br><span class="hljs-number">1</span> <span class="hljs-type">row</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.00</span> sec)<br></code></pre></td></tr></table></figure>
 
 <p>这里可以看到了返回了</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">replace(&quot;.&quot;,<span class="hljs-type">char</span>(<span class="hljs-number">46</span>),&quot;.&quot;)<br></code></pre></td></tr></table></figure>
@@ -315,6 +316,13 @@
               <div class="post-metas my-3">
   
   
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/replace%E5%87%BD%E6%95%B0/">#replace函数</a>
+      
+    </div>
+  
 </div>
 
 
@@ -323,8 +331,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div></div>
-      <div>http://example.com/2023/07/07/[HDCTF 2023]LoginMaster/</div>
+      <div>HDCTF 2023-LoginMaster</div>
+      <div>http://example.com/2023/07/10/HDCTF-2023-LoginMaster/</div>
     </div>
     <div class="license-meta">
       
@@ -336,7 +344,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Veröffentlicht am</div>
-          <div>July 7, 2023</div>
+          <div>July 10, 2023</div>
         </div>
       
       
@@ -368,18 +376,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/07/10/%5BGYCTF2020%5DEasyThinking/" title="">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile"></span>
-                        <span class="visible-mobile">Vorheriger</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/14/python%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84/" title="os.path.join">
-                        <span class="hidden-mobile">os.path.join</span>
+                      <a href="/2023/07/10/GYCTF2020-EasyThinking/" title="GYCTF2020-EasyThinking">
+                        <span class="hidden-mobile">GYCTF2020-EasyThinking</span>
                         <span class="visible-mobile">Nächster</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
