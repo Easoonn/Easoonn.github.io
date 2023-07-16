@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html lang="cn" data-default-color-scheme=auto>
+<html lang="zh-cn" data-default-color-scheme=auto>
 
 
 
@@ -13,20 +13,20 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="Eason">
+  <meta name="author" content="Ysper">
   <meta name="keywords" content="">
   
     <meta name="description" content="题目提示伪协议加反序列化，打开环境看到前一部分源码，应该是利用伪协议读取反序列化代码的。  先利用data协议绕过第一个if判断payload 1?text&#x3D;data:&#x2F;&#x2F;text&#x2F;plain,welcomme to zjctf  然后再利用filter协议读取他给的一个useless.php 1file&#x3D;php:&#x2F;&#x2F;filter&#x2F;read&#x3D;convert.base64-enconde&#x2F;resou">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ZJCTF 2019NiZhuanSiWei">
 <meta property="og:url" content="http://example.com/2023/04/27/ZJCTF-2019NiZhuanSiWei/index.html">
-<meta property="og:site_name" content="Eason">
+<meta property="og:site_name" content="Ysper">
 <meta property="og:description" content="题目提示伪协议加反序列化，打开环境看到前一部分源码，应该是利用伪协议读取反序列化代码的。  先利用data协议绕过第一个if判断payload 1?text&#x3D;data:&#x2F;&#x2F;text&#x2F;plain,welcomme to zjctf  然后再利用filter协议读取他给的一个useless.php 1file&#x3D;php:&#x2F;&#x2F;filter&#x2F;read&#x3D;convert.base64-enconde&#x2F;resou">
-<meta property="og:locale">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="e:\blog\source_posts\ZJCTF-2019NiZhuanSiWei\image-20230427143312278.png">
 <meta property="article:published_time" content="2023-04-27T06:12:48.000Z">
 <meta property="article:modified_time" content="2023-04-27T07:07:37.798Z">
-<meta property="article:author" content="Eason">
+<meta property="article:author" content="Ysper">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="e:\blog\source_posts\ZJCTF-2019NiZhuanSiWei\image-20230427143312278.png">
   
@@ -34,7 +34,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>ZJCTF 2019NiZhuanSiWei - Eason</title>
+  <title>ZJCTF 2019NiZhuanSiWei - Ysper</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -72,7 +72,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/load.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -133,7 +133,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
-                <span>Startseite</span>
+                <span>Hejmpaĝo</span>
               </a>
             </li>
           
@@ -145,7 +145,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
-                <span>Archiv</span>
+                <span>Arkivoj</span>
               </a>
             </li>
           
@@ -157,7 +157,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
-                <span>Kategorien</span>
+                <span>Kategorio</span>
               </a>
             </li>
           
@@ -169,7 +169,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
-                <span>Schlagwörter</span>
+                <span>Etikedoj</span>
               </a>
             </li>
           
@@ -181,7 +181,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
-                <span>Über</span>
+                <span>Pri</span>
               </a>
             </li>
           
@@ -227,7 +227,7 @@
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
         <time datetime="2023-04-27 14:12" pubdate>
-          April 27, 2023 pm
+          2023年4月27日 下午
         </time>
       </span>
     
@@ -238,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          988 wörter
+          988 vortoj
         
       </span>
     
@@ -249,12 +249,20 @@
         
         
         
-          9 minuten
+          9 minutoj
         
       </span>
     
 
     
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> rigardoj
+        </span>
+        
+      
     
   </div>
 
@@ -293,7 +301,7 @@
               <div class="markdown-body">
                 
                 <p>题目提示伪协议加反序列化，打开环境看到前一部分源码，应该是利用伪协议读取反序列化代码的。</p>
-<p><img src="E:\blog\source_posts\ZJCTF-2019NiZhuanSiWei\image-20230427143312278.png" srcset="/img/loading.gif" lazyload alt="image-20230427143312278"></p>
+<p><img src="E:\blog\source_posts\ZJCTF-2019NiZhuanSiWei\image-20230427143312278.png" srcset="/img/load.gif" lazyload alt="image-20230427143312278"></p>
 <p>先利用data协议绕过第一个if判断payload</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php">?text=data:<span class="hljs-comment">//text/plain,welcomme to zjctf</span><br></code></pre></td></tr></table></figure>
 
@@ -337,20 +345,25 @@
     <div class="license-meta">
       
         <div class="license-meta-item">
-          <div>Beitragsautor</div>
-          <div>Eason</div>
+          <div>Aŭtoro</div>
+          <div>Ysper</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
-          <div>Veröffentlicht am</div>
-          <div>April 27, 2023</div>
+          <div>Postigita</div>
+          <div>2023年4月27日</div>
         </div>
       
       
+        <div class="license-meta-item license-meta-date">
+          <div>Aktualizita</div>
+          <div>2023年4月27日</div>
+        </div>
+      
       
         <div class="license-meta-item">
-          <div>Urheberrechtshinweis</div>
+          <div>Lizenta</div>
           <div>
             
               
@@ -379,7 +392,7 @@
                       <a href="/2023/05/06/GDOUCTF-2023%E5%8F%97%E4%B8%8D%E4%BA%86%E4%B8%80%E7%82%B9/" title="GDOUCTF 2023受不了一点">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">GDOUCTF 2023受不了一点</span>
-                        <span class="visible-mobile">Vorheriger</span>
+                        <span class="visible-mobile">Antaŭa afiŝo</span>
                       </a>
                     
                   </article>
@@ -388,7 +401,7 @@
                     
                       <a href="/2023/04/24/SWPUCTF2021%E6%96%B0%E7%94%9F%E8%B5%9BPseudoProtocols-1/" title="SWPUCTF2021新生赛PseudoProtocols">
                         <span class="hidden-mobile">SWPUCTF2021新生赛PseudoProtocols</span>
-                        <span class="visible-mobile">Nächster</span>
+                        <span class="visible-mobile">Sekva afiŝo</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -418,7 +431,7 @@
     <div id="toc">
   <p class="toc-header">
     <i class="iconfont icon-list"></i>
-    <span>Inhaltsverzeichnis</span>
+    <span>Enhavtabelo</span>
   </p>
   <div class="toc-body" id="toc-body"></div>
 </div>
@@ -474,7 +487,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Suchen</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Serĉi</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -482,7 +495,7 @@
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">Stichwort</label>
+          <label data-error="x" data-success="v" for="local-search-input">ŝlosivorto</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
@@ -510,14 +523,14 @@
   
     
       <span id="busuanzi_container_site_pv" style="display: none">
-        Alle Aufrufe: 
+        Vidoj: 
         <span id="busuanzi_value_site_pv"></span>
         
       </span>
     
     
       <span id="busuanzi_container_site_uv" style="display: none">
-        Alle Besucher: 
+        Visitoj: 
         <span id="busuanzi_value_site_uv"></span>
         
       </span>
@@ -687,7 +700,7 @@
   
 
   <noscript>
-    <div class="noscript-warning">Blog funktioniert am besten mit aktiviertem JavaScript</div>
+    <div class="noscript-warning">Blogo funkcias plej bone kun JavaScript ebligita</div>
   </noscript>
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-haruto"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-haruto"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
