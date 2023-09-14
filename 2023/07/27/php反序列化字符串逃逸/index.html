@@ -19,7 +19,7 @@
     <meta name="description" content="前置知识学字符串逃逸前，首先要知道为什么可以造成字符串逃逸，以及php反序列化的几大特性。 php反序列化中以”;”作为字段的分隔，以”}”作为结尾（字符串除外），长度不对应时会报错 以我的结论来说，为什么会造成字符串逃逸： 一句话就是”}”结束符会闭合，导致我们输入的恶意代码会被正常的序列化，而后面的字符，因为提前闭合了，就会被舍弃。 两种情况1234过滤后字符减少             ｛意">
 <meta property="og:type" content="article">
 <meta property="og:title" content="php反序列化字符串逃逸">
-<meta property="og:url" content="http://easoonn.github.io.com/2023/07/27/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%80%83%E9%80%B8/index.html">
+<meta property="og:url" content="http://easoonn.github.io/2023/07/27/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%80%83%E9%80%B8/index.html">
 <meta property="og:site_name" content="Ysper">
 <meta property="og:description" content="前置知识学字符串逃逸前，首先要知道为什么可以造成字符串逃逸，以及php反序列化的几大特性。 php反序列化中以”;”作为字段的分隔，以”}”作为结尾（字符串除外），长度不对应时会报错 以我的结论来说，为什么会造成字符串逃逸： 一句话就是”}”结束符会闭合，导致我们输入的恶意代码会被正常的序列化，而后面的字符，因为提前闭合了，就会被舍弃。 两种情况1234过滤后字符减少             ｛意">
 <meta property="og:locale" content="zh_CN">
@@ -86,7 +86,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"easoonn.github.io.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/load.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"A43OMPqg1j9IU6lxnXOVgDA6-gzGzoHsz","app_key":"Tvskz6WTcT0bKtxxXgrmlNWf","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"easoonn.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/load.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"A43OMPqg1j9IU6lxnXOVgDA6-gzGzoHsz","app_key":"Tvskz6WTcT0bKtxxXgrmlNWf","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -431,7 +431,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>php反序列化字符串逃逸</div>
-      <div>http://easoonn.github.io.com/2023/07/27/php反序列化字符串逃逸/</div>
+      <div>http://easoonn.github.io/2023/07/27/php反序列化字符串逃逸/</div>
     </div>
     <div class="license-meta">
       
